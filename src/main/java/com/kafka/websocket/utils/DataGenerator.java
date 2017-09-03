@@ -19,7 +19,8 @@ public class DataGenerator implements ApplicationListener<BrokerAvailabilityEven
 
 	private final MessageSendingOperations<String> messagingTemplate;
 	private final KafkaConsumer kafkaConsumer = new KafkaConsumer();
-	private List<KafkaStream<byte[], byte[]>> streams = kafkaConsumer.getStreamsFromKafkaTopic("stream_processing_results");
+	private List<KafkaStream<byte[], byte[]>> streams = kafkaConsumer
+			.getStreamsFromKafkaTopic("stream_processing_results");
 
 	@Autowired
 	public DataGenerator(final MessageSendingOperations<String> messagingTemplate) {
@@ -43,10 +44,17 @@ public class DataGenerator implements ApplicationListener<BrokerAvailabilityEven
 		String messageJSON = new String(it.next().message());
 		System.out.println(messageJSON);
 		JSONObject currentKafkaRecordJSONObject = JSONUtils.getJSONObjectFromGivenString(messageJSON);
-		Object currentMean = currentKafkaRecordJSONObject.get("mean");
-		Double d = (Double) currentMean;
-		Integer i = d.intValue(); // i becomes 5
-		System.out.println(currentMean);
-		this.messagingTemplate.convertAndSend("/data",i);
+		Object currentReadTagID = currentKafkaRecordJSONObject.get("readTag_id");
+		Integer readTagID = Integer.valueOf(String.valueOf(currentReadTagID));
+		//Hardcoded readTagID - application will be properly parametrized
+		if (readTagID.equals(3158)) {
+			Object currentMean = currentKafkaRecordJSONObject.get("mean");
+			Double d = (Double) currentMean;
+			Integer i = d.intValue(); // i becomes 5
+			System.out.println(currentMean);
+			// TODO - gets data from proper device id
+			this.messagingTemplate.convertAndSend("/data", i);
+			
+		}
 	}
 }
