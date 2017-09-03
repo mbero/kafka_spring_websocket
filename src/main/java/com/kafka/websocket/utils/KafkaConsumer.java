@@ -42,7 +42,6 @@ public class KafkaConsumer {
 	public void run() {
 		Map<String, Integer> topicCount = new HashMap<>();
 		topicCount.put(TOPIC, 1);
-
 		Map<String, List<KafkaStream<byte[], byte[]>>> consumerStreams = consumerConnector.createMessageStreams(topicCount);
 		List<KafkaStream<byte[], byte[]>> streams = consumerStreams.get(TOPIC);
 		for (final KafkaStream stream : streams) {
@@ -51,5 +50,15 @@ public class KafkaConsumer {
 				System.out.println("Message from Single Topic: " + new String(it.next().message()));
 			}
 		}
+	}
+	
+	public List<KafkaStream<byte[], byte[]>> getStreamsFromKafkaTopic(String topicName){
+		
+		Map<String, Integer> topicCount = new HashMap<>();
+		topicCount.put(topicName, 1);
+		Map<String, List<KafkaStream<byte[], byte[]>>> consumerStreams = consumerConnector.createMessageStreams(topicCount);
+		List<KafkaStream<byte[], byte[]>> streams = consumerStreams.get(topicName);
+		
+		return streams;
 	}
 }
