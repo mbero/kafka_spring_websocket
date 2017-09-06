@@ -1,5 +1,4 @@
 var randomData;
-
 $('#randomDataChart').highcharts({
   chart : {
     type : 'line',
@@ -10,7 +9,7 @@ $('#randomDataChart').highcharts({
     }
   },
   title : {
-    text : 'Spark Streaming Analysis Result :'
+    text : 'Spark Streaming Analysis Result'
   },
   xAxis : {
     type : 'datetime',
@@ -45,6 +44,8 @@ var client = Stomp.over(socket);
 client.connect('user', 'password', function(frame) {
 
   client.subscribe("/data", function(message) {
+	var titlePartForTest = message.body;
+	document.getElementById("dataChartInfo").innerHTML='ReadTagId : ' +  titlePartForTest;
     var point = [ (new Date()).getTime(), parseInt(message.body) ];
     var shift = randomData.data.length > 60;
     randomData.addPoint(point, true, shift);

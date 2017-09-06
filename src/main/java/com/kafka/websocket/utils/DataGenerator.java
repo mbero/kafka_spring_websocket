@@ -47,14 +47,19 @@ public class DataGenerator implements ApplicationListener<BrokerAvailabilityEven
 		Object currentReadTagID = currentKafkaRecordJSONObject.get("readTag_id");
 		Integer readTagID = Integer.valueOf(String.valueOf(currentReadTagID));
 		//Hardcoded readTagID - application will be properly parametrized
-		if (readTagID.equals(3158)) {
-			Object currentMean = currentKafkaRecordJSONObject.get("mean");
-			Double d = (Double) currentMean;
-			Integer i = d.intValue(); // i becomes 5
-			System.out.println(currentMean);
-			// TODO - gets data from proper device id
-			this.messagingTemplate.convertAndSend("/data", i);
+		//TODO - as 'data' - json should be sended with informations like
+		/*
+		 * - readTagId - 
+		 * - metadata information (location, tag description, name, unit - proper request to postgresql db should be made
+		 * - value 
+		 */
+		Object currentMean = currentKafkaRecordJSONObject.get("mean");
+		Double d = (Double) currentMean;
+		Integer i = d.intValue(); // i becomes 5
+		System.out.println(currentMean);
+		// TODO - gets data from proper device id
+		this.messagingTemplate.convertAndSend("/data", i);
 			
-		}
+		
 	}
 }
