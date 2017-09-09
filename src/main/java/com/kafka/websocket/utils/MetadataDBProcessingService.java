@@ -8,6 +8,12 @@ import com.kafka.websockt.utils.model.ParameterMetadataSummary;
 
 public class MetadataDBProcessingService {
 
+	/**
+	 * 
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
 	public ParameterMetadataSummary getMetadaSummaryFromGivenResultSet(ResultSet rs) throws SQLException{
 		ParameterMetadataSummary parameterMetadata = new ParameterMetadataSummary();
 		while(rs.next()){
@@ -15,29 +21,30 @@ public class MetadataDBProcessingService {
 			parameterMetadata.setDeviceName(deviceName);
 			String deviceDescription = rs.getString("description");
 			parameterMetadata.setDeviceDescription(deviceDescription);
-	
+			String locationName = rs.getString("name");
+			parameterMetadata.setLocationName(locationName);
+			String locationDescription = rs.getString("description");
+			parameterMetadata.setLocationDescription(locationDescription);
 		}
 		
 		return parameterMetadata;
 	}
 	
-	
+	/**
+	 * Returns result set with metadata based on readTagId
+	 * @param readTagID
+	 * @return
+	 * @throws SQLException
+	 */
 	public ResultSet getResultsSetWithMetadata(String readTagID) throws SQLException{
 		PostgreSQLJDBCClient postgreSQLJDBCClient = new PostgreSQLJDBCClient();
 		Connection connection = postgreSQLJDBCClient.createConnection("localhost:5433/bms_metadata_test", "postgres", "postgres");
-		ResultSet resultSet = postgreSQLJDBCClient.getResultSetFromGivenQuery(connection, "select * from public.'Device'  JOIN public.'Location' "
-				+ "on public.'Device'.location_id = public.'Location'.id  "
-				+ "JOIN public.'Parameter' on public.'Parameter'.device_id = public.'Device'.id"
-				+ "JOIN public.'Unit' on public.'Parameter'.unit_id = public.'Unit'.id WHERE public.'Device'.id = 1");
+		ResultSet resultSet = postgreSQLJDBCClient.getResultSetFromGivenQuery(connection, 	
+				"select * from \"Device\"  JOIN \"Location\" " + "on \"Device\".location_id = \"Location\".id  "
+				+ "JOIN \"Parameter\" on \"Parameter\".device_id = \"Device\".id "
+				+ "JOIN \"Unit\" on \"Parameter\".unit_id = \"Unit\".id WHERE \"Device\".id = " + readTagID);
 		
 		return resultSet;
-	
-		/*
-		 * select * from public."Device"  JOIN public."Location" on public."Device".location_id = public."Location".id  
-			       JOIN public."Parameter" on public."Parameter".device_id = public."Device".id
-			       JOIN public."Unit" on public."Parameter".unit_id = public."Unit".id
-WHERE public."Device".id = 1
-		 */
 	}
 	
 	/**
