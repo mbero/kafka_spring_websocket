@@ -11,7 +11,6 @@ public class PostgreSQLJDBCClient {
 	private static Connection conn;
 
 	public Connection createConnection(String hostAndDatabaseName, String userName, String password) {
-
 		if (conn == null) {
 			final String dbUrl = "jdbc:postgresql://" + hostAndDatabaseName;
 			try {
