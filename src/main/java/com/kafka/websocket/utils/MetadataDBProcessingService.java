@@ -1,6 +1,5 @@
 package com.kafka.websocket.utils;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,6 +42,7 @@ public class MetadataDBProcessingService {
 	 */
 	public ResultSet getResultsSetWithMetadata(String readTagID) throws SQLException {
 		PostgreSQLJDBCClient postgreSQLJDBCClient = new PostgreSQLJDBCClient();
+		//TODO - parametrize MetadataDBProcessingService
 		Connection connection = postgreSQLJDBCClient.createConnection("localhost:5433/bms_metadata_test", "postgres",
 				"postgres");
 		ResultSet resultSet = postgreSQLJDBCClient.getResultSetFromGivenQuery(connection,
