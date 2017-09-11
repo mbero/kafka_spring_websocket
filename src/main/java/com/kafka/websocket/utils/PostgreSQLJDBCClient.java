@@ -9,7 +9,9 @@ import java.sql.Statement;
 public class PostgreSQLJDBCClient {
 
 	private static Connection conn;
-
+	private  Statement stmt;
+	private ResultSet resultSet;
+	
 	public Connection createConnection(String hostAndDatabaseName, String userName, String password) {
 		if (conn == null) {
 			final String dbUrl = "jdbc:postgresql://" + hostAndDatabaseName;
@@ -43,13 +45,41 @@ public class PostgreSQLJDBCClient {
 			System.out.println("Po³¹czenie nie jest nawi¹zane, nie mo¿e zostaæ zamkniête");
 		}
 	}
+	public void closeConnection() {
+		System.out.println("Rozpoczynam dzia³anie funkcji closeConnection()");
+		if (conn != null) {
+			try {
+				conn.close();
+				System.out.println("Po³¹czenie z baz¹ zamkniêto poprawnie");
+			} catch (SQLException sqlException) {
+				System.out.println("Wystapi³ b³¹d podczas zamykania po³¹czenia z baz¹");
+				System.out.println(sqlException.getCause());
+			}
+		} else {
+			System.out.println("Po³¹czenie nie jest nawi¹zane, nie mo¿e zostaæ zamkniête");
+		}
+	}
 
 	public ResultSet getResultSetFromGivenQuery(Connection connection, String selectQuery) throws SQLException {
-		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery(selectQuery);
-		return rs;
+		//Statement stmt = connection.createStatement();
+		//ResultSet rs = stmt.executeQuery(selectQuery);
+		 stmt = connection.createStatement (ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		 resultSet = stmt.executeQuery (selectQuery); 
+
+		return resultSet;
 	}
 	
+	public void closeStatement() throws SQLException{
+		if(this.stmt!=null){
+			this.stmt.close();
+		}
+	}
+	
+	public void closeResultset() throws SQLException{
+		if(this.resultSet!=null){
+			this.resultSet.close();
+		}
+	}
 	
 
 }

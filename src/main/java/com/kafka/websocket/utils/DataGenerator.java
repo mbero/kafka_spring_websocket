@@ -54,22 +54,11 @@ public class DataGenerator implements ApplicationListener<BrokerAvailabilityEven
 		Integer readTagID = Integer.valueOf(String.valueOf(currentReadTagID));
 		ParameterMetadataSummary parameterMetadataSummary = null;
 		try {
-			parameterMetadataSummary = metadataProcessingService
-					.getParameterMetadataSummaryObjectByReadTagID(String.valueOf(readTagID));
+			parameterMetadataSummary = metadataProcessingService.getParameterMetadataSummaryObjectByReadTagID(String.valueOf(readTagID));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.print("Error occurred during processing metadata information for :"+ readTagID);
 			e.printStackTrace();
 		}
-		// TODO - make large JSON object which combines : 1.ReadTagID,
-		// ParameterMetadataSummary, 3.Mean Value
-
-		// Hardcoded readTagID - application will be properly parametrized
-		// TODO - as 'data' - json should be sended with informations like
-		/*
-		 * - readTagId - - metadata information (location, tag description,
-		 * name, unit - proper request to postgresql db should be made - value
-		 */
-
 		Object currentMean = currentKafkaRecordJSONObject.get("mean");
 		Double d = (Double) currentMean;
 		Integer i = d.intValue(); // i becomes 5
@@ -83,7 +72,7 @@ public class DataGenerator implements ApplicationListener<BrokerAvailabilityEven
 		}
 
 		if (histogramSummaryAsJSONString.equals("") != true) {
-			this.messagingTemplate.convertAndSend("/data", i);
+			this.messagingTemplate.convertAndSend("/data", histogramSummaryAsJSONString);
 		}
 
 	}
