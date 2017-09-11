@@ -49,7 +49,10 @@ client.connect('user', 'password', function(frame) {
 	message.body = message.body.substring(0,message.body.length-1);
 	message.body = message.body.replace(/\\/g, "");
 	var messageBodyJSONObject = JSON.parse(message.body);
-	document.getElementById("dataChartInfo").innerHTML='Summary of parameter read : '+ message.body;
+	//Summary of parameter read : {"readTagID":3155,"parameterMetadataSummary":{"locationName":"Serwerownia","locationDescription":"Glowny budynek czesci serwerowej","deviceName":"MeterDefinition","deviceDescription":"Licznik energii","parameterName":"Wspolczynnik_Mocy_3","unitName":"Percent"},"meanValue":50}
+	
+	document.getElementById("dataChartInfo").innerHTML='<b>Current parameter metadata summary</b>: <br> '+ message.body;
+	
     var point = [ (new Date()).getTime(), parseInt(messageBodyJSONObject.meanValue) ];
     var shift = randomData.data.length > 60;
     randomData.addPoint(point, true, shift);

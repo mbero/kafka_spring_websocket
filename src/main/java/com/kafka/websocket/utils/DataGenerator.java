@@ -44,7 +44,7 @@ public class DataGenerator implements ApplicationListener<BrokerAvailabilityEven
 	 * 
 	 * }
 	 */
-	@Scheduled(fixedDelay = 1000)
+	@Scheduled(fixedDelay = 100)
 	public void sendDataUpdates() {
 		ConsumerIterator<byte[], byte[]> it = streams.get(0).iterator();
 		String messageJSON = new String(it.next().message());
